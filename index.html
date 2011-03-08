@@ -1,0 +1,41 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+<head>
+	<title>DOMready</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	
+	<img src="Assets/Images/large_image_1.jpg" width="100" height="100">
+	<img src="Assets/Images/large_image_2.jpg" width="100" height="100">
+	<img src="Assets/Images/large_image_3.jpg" width="100" height="100">
+	
+	<script src="Assets/Scripts/DOMready.js"></script>
+	<script>
+		DOMready(function(){
+			console.log('1: ' + new Date());
+		});
+		
+		DOMready(function(){
+			console.log('2: ' + new Date());
+		});
+		
+		DOMready(function(){
+			console.log('3: ' + new Date());
+		});
+		
+		DOMready(function(){
+			console.log('4: ' + new Date());
+		});
+		
+		DOMready(function(){
+			console.log('5: ' + new Date());
+		});
+		
+		window.onload = function() {
+			console.log('Window Load Event: ' + new Date());
+		}
+	</script>
+	
+</body>
+</html>
