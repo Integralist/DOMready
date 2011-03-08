@@ -12,9 +12,7 @@ If you try and call a function which modifies an element in the DOM, but yet you
 
 So to avoid this, developers would write code that looked like this...
 
-`window.onload = function() {`
-`	// do something here`
-`};`
+`window.onload = function() { // do something here };`
 
 ...but the problem was that this is too slow for most developers. You want to be interacting with your DOM as soon as possible, but if you use the `window.onload` event then you're not just waiting for the DOM but all its content (such as images, stylesheets, iframes etc) to load as well.
 
