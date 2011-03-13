@@ -7,14 +7,13 @@ var DOMready = (function(){
 		 original_onload;
 	
 	// Private inner function which is called once DOM is loaded.
-	
-	function init() {
+	function process() {
 		// Let the script know the DOM is loaded
 		loaded = true;
 		
 		// Cleanup
 		if (document.addEventListener) {
-			document.removeEventListener("DOMContentLoaded", init, false);
+			document.removeEventListener("DOMContentLoaded", process, false);
 		}
 	
 		// Move the zero index item from the queue and set 'exec' equal to it
@@ -31,11 +30,12 @@ var DOMready = (function(){
 		}
 		
 		if (document.addEventListener) {
-			// This event only ever fires once
-			document.addEventListener("DOMContentLoaded", init, false);
+			// Any number of listeners can be set for when this event fires,
+			// but just know that this event only ever fires once
+			document.addEventListener("DOMContentLoaded", process, false);
 		} else {
 			// All browsers support document.readyState (except Firefox 3.5 and lower, but they support DOMContentLoaded event)
-			/loaded|complete/.test(document.readyState) ? init() : setTimeout("DOMready(" + fn + ")", 10)
+			/loaded|complete/.test(document.readyState) ? process() : setTimeout("DOMready(" + fn + ")", 10)
 		}
 		
 		// Fall back to standard window.onload event
@@ -44,10 +44,10 @@ var DOMready = (function(){
 		
 		window.onload = function() {
 		
-			// Note: calling init() now wont cause any problem for modern browsers.
+			// Note: calling process() now wont cause any problem for modern browsers.
 			// Because the function would have already been called when the DOM was loaded.
 			// Meaning the queue of functions have already been executed
-			init();
+			process();
 			
 			// Check for original window.onload and execute it
 			if (original_onload) {
