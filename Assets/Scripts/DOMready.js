@@ -4,7 +4,21 @@ var DOMready = (function(){
 	var queue = [],
 		 exec,
 		 loaded,
-		 original_onload;
+		 original_onload,
+		 explorerTimer,
+		 isIE = (function() {
+			var undef,
+				 v = 3,
+				 div = document.createElement('div'),
+				 all = div.getElementsByTagName('i');
+		
+			while (
+				div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+				all[0]
+			);
+		
+			return v > 4 ? v : undef;
+		}());
 	
 	// Private inner function which is called once DOM is loaded.
 	function process() {
@@ -33,9 +47,22 @@ var DOMready = (function(){
 			// Any number of listeners can be set for when this event fires,
 			// but just know that this event only ever fires once
 			document.addEventListener("DOMContentLoaded", process, false);
-		} else {
-			// All browsers support document.readyState (except Firefox 3.5 and lower, but they support DOMContentLoaded event)
-			/loaded|complete/.test(document.readyState) ? process() : setTimeout("DOMready(" + fn + ")", 10)
+		}
+		
+		// Internet Explorer versions less than 9 don't support DOMContentLoaded
+		// But the doScroll('left') method appears to be the most reliable solution
+		if (isIE < 9) {
+			explorerTimer = window.setInterval(function() {
+				if (document.body) {
+					try {
+						document.createElement('div').doScroll('left');
+						window.clearInterval(explorerTimer);
+						return process();
+					} catch(e) {
+						console.log(e.message);
+					}
+				}
+			}, 10);	
 		}
 		
 		// Fall back to standard window.onload event
