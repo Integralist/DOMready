@@ -1,7 +1,9 @@
-var DOMready = (function(){
+var DOMready = (function() {
 
 	// Variables used throughout this script
-	var queue = [],
+	var win = window,
+		 doc = win.document,
+		 queue = [],
 		 exec,
 		 loaded,
 		 original_onload,
@@ -49,8 +51,9 @@ var DOMready = (function(){
 			document.addEventListener("DOMContentLoaded", process, false);
 		}
 		
-		// Internet Explorer versions less than 9 don't support DOMContentLoaded
-		// But the doScroll('left') method appears to be the most reliable solution
+		// Internet Explorer versions less than 9 don't support DOMContentLoaded.
+		// The doScroll('left') method  by Diego Perini (http://javascript.nwbox.com/IEContentLoaded/) appears to be the most reliable solution.
+		// Microsoft documentation explains the reasoning behind this http://msdn.microsoft.com/en-us/library/ms531426.aspx#Component_Initialization
 		if (isIE < 9) {
 			explorerTimer = window.setInterval(function() {
 				if (document.body) {
@@ -58,11 +61,23 @@ var DOMready = (function(){
 						document.createElement('div').doScroll('left');
 						window.clearInterval(explorerTimer);
 						return process();
-					} catch(e) {
-						console.log(e.message);
-					}
+					} catch(e) {}
 				}
-			}, 10);	
+			}, 10);
+
+			// If our page is placed inside an <iframe> by another user then the above doScroll method wont work.
+			// As a secondary fallback for Internet Explorer we'll check the readyState property.
+			// Be aware that this will fire *just* before the window.onload event so isn't ideal.
+			doc.onreadystatechange = function() {
+				if (doc.readyState == 'complete') {
+					// Clean-up
+					doc.onreadystatechange = null;
+					window.clearInterval(explorerTimer);
+					
+					// Process function stack
+					process();
+				}
+			};
 		}
 		
 		// Fall back to standard window.onload event
