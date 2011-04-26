@@ -13,7 +13,7 @@ var DOMready = (function() {
 		 isIE = (function() {
 			var undef,
 				 v = 3,
-				 div = document.createElement('div'),
+				 div = doc.createElement('div'),
 				 all = div.getElementsByTagName('i');
 		
 			while (
@@ -30,8 +30,8 @@ var DOMready = (function() {
 		loaded = true;
 		
 		// Cleanup
-		if (document.addEventListener) {
-			document.removeEventListener("DOMContentLoaded", process, false);
+		if (doc.addEventListener) {
+			doc.removeEventListener("DOMContentLoaded", process, false);
 		}
 	
 		// Move the zero index item from the queue and set 'exec' equal to it
@@ -47,10 +47,10 @@ var DOMready = (function() {
 			return fn();
 		}
 		
-		if (document.addEventListener) {
+		if (doc.addEventListener) {
 			// Any number of listeners can be set for when this event fires,
 			// but just know that this event only ever fires once
-			document.addEventListener("DOMContentLoaded", process, false);
+			doc.addEventListener("DOMContentLoaded", process, false);
 		}
 		
 		// Internet Explorer versions less than 9 don't support DOMContentLoaded.
@@ -58,7 +58,7 @@ var DOMready = (function() {
 		// Microsoft documentation explains the reasoning behind this http://msdn.microsoft.com/en-us/library/ms531426.aspx#Component_Initialization
 		else if (isIE < 9) {
 			explorerTimer = win.setInterval(function() {
-				if (document.body) {
+				if (doc.body) {
 					try {
 						dce.('div').doScroll('left');
 						win.clearInterval(explorerTimer);
