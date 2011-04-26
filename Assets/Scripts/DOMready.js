@@ -107,20 +107,11 @@ var DOMready = (function() {
 			}, 10);
 		}
 		
-		// Fall back to standard window.onload event
-		// But make sure to store the original window.onload in case it was already set by another script
-		original_onload = win.onload;
-		
 		new_onload = function() {
 			// Note: calling process() now wont cause any problem for modern browsers.
 			// Because the function would have already been called when the DOM was loaded.
 			// Meaning the queue of functions have already been executed
 			process();
-			
-			// Check for original window.onload and execute it
-			if (original_onload) {
-				original_onload();
-			}
 			
 			// Clean-up
 			if (supportAEL) {
@@ -130,8 +121,8 @@ var DOMready = (function() {
 			}
 		};
 		
-		// Using DOM1 model event handlers makes the script more secure. 
-		// Otherwise DOM0 event handlers could be overwritten by 3rd-party script.
+		// Using DOM1 model event handlers makes the script more secure than DOM0 event handlers.
+		// This way we don't have to worry about an already existing window.onload being overwritten as DOM1 model allows multiple handlers per event.
 		if (supportAEL) {
 			doc.addEventListener('load', new_onload, false);
 		} else {
