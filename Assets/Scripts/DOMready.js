@@ -68,7 +68,7 @@ var DOMready = (function() {
 				if (doc.body) {
 					// Check for doScroll success
 					try {
-						dce.('div').doScroll('left');
+						dce('div').doScroll('left');
 						win.clearInterval(explorerTimer);
 					} catch(e) { 
 						return;
