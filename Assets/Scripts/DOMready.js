@@ -14,8 +14,7 @@ var DOMready = (function() {
 		 queue = [],
 		 exec,
 		 loaded,
-		 original_onload,
-		 new_onload, 
+		 fallback_onload, 
 		 explorerTimer,
 		 readyStateTimer,
 		 isIE = (function() {
@@ -107,7 +106,7 @@ var DOMready = (function() {
 			}, 10);
 		}
 		
-		new_onload = function() {
+		fallback_onload = function() {
 			// Note: calling process() now wont cause any problem for modern browsers.
 			// Because the function would have already been called when the DOM was loaded.
 			// Meaning the queue of functions have already been executed
@@ -115,18 +114,18 @@ var DOMready = (function() {
 			
 			// Clean-up
 			if (supportAEL) {
-				doc.removeEventListener('load', new_onload, false);
+				doc.removeEventListener('load', fallback_onload, false);
 			} else {
-				doc.detachEvent('onload', new_onload);
+				doc.detachEvent('onload', fallback_onload);
 			}
 		};
 		
 		// Using DOM1 model event handlers makes the script more secure than DOM0 event handlers.
 		// This way we don't have to worry about an already existing window.onload being overwritten as DOM1 model allows multiple handlers per event.
 		if (supportAEL) {
-			doc.addEventListener('load', new_onload, false);
+			doc.addEventListener('load', fallback_onload, false);
 		} else {
-			doc.attachEvent('onload', new_onload);
+			doc.attachEvent('onload', fallback_onload);
 		}
 		
 		// As the DOM hasn't loaded yet we'll store this function and execute it later
