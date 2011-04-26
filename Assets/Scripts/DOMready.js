@@ -3,11 +3,13 @@ var DOMready = (function() {
 	// Variables used throughout this script
 	var win = window,
 		 doc = win.document,
+		 dce = doc.createElement,
 		 queue = [],
 		 exec,
 		 loaded,
 		 original_onload,
 		 explorerTimer,
+		 readyStateTimer,
 		 isIE = (function() {
 			var undef,
 				 v = 3,
@@ -54,37 +56,48 @@ var DOMready = (function() {
 		// Internet Explorer versions less than 9 don't support DOMContentLoaded.
 		// The doScroll('left') method  by Diego Perini (http://javascript.nwbox.com/IEContentLoaded/) appears to be the most reliable solution.
 		// Microsoft documentation explains the reasoning behind this http://msdn.microsoft.com/en-us/library/ms531426.aspx#Component_Initialization
-		if (isIE < 9) {
-			explorerTimer = window.setInterval(function() {
+		else if (isIE < 9) {
+			explorerTimer = win.setInterval(function() {
 				if (document.body) {
 					try {
-						document.createElement('div').doScroll('left');
-						window.clearInterval(explorerTimer);
+						dce.('div').doScroll('left');
+						win.clearInterval(explorerTimer);
 						return process();
 					} catch(e) {}
 				}
 			}, 10);
-
-			// If our page is placed inside an <iframe> by another user then the above doScroll method wont work.
-			// As a secondary fallback for Internet Explorer we'll check the readyState property.
-			// Be aware that this will fire *just* before the window.onload event so isn't ideal.
-			doc.onreadystatechange = function() {
+			
+			// Inner function to check readyState
+			function checkReadyState() {
 				if (doc.readyState == 'complete') {
 					// Clean-up
-					doc.onreadystatechange = null;
-					window.clearInterval(explorerTimer);
+					doc.detachEvent('onreadystatechange', checkReadyState);
+					win.clearInterval(explorerTimer);
+					win.clearInterval(readyStateTimer);
 					
 					// Process function stack
 					process();
 				}
-			};
+			}
+
+			// If our page is placed inside an <iframe> by another user then the above doScroll method wont work.
+			// As a secondary fallback for Internet Explorer we'll check the readyState property.
+			// Be aware that this will fire *just* before the window.onload event so isn't ideal.
+			// Also notice that we use IE specific event model (attachEvent) to avoid being overwritten by 3rd party code.
+			doc.attachEvent('onreadystatechange', checkReadyState);
+			
+			// According to @jdalton: some browsers don't fire an onreadystatechange event, but do update the document.readyState
+			// So to workaround the above snippet we'll also poll via setInterval.
+			readyStateTimer = win.setInterval(function() {
+				checkReadyState();
+			}, 10);
 		}
 		
 		// Fall back to standard window.onload event
 		// But make sure to store the original window.onload in case it was already set by another script
-		original_onload = window.onload;
+		original_onload = win.onload;
 		
-		window.onload = function() {
+		win.onload = function() {
 		
 			// Note: calling process() now wont cause any problem for modern browsers.
 			// Because the function would have already been called when the DOM was loaded.
