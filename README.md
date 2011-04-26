@@ -26,7 +26,13 @@ This script is one such way.
 Disclaimer
 ----------
 
-I'm aware of the many other ways to do this, I know because I've tried them all over the years.
+This DOMready function was originally a modified version of @ded's "Smallest DOMReady code, ever' - but it quickly became apparent (thanks to @jdalton) that this version was sorely lacking and that although the work-around did 'work' it was very slow and in some browsers only marginally quicker than a simple window.onload.
+
+So I reverted the code back to a previous version I had from a few years back.
+
+But since then I've had feedback from both @jdalton and @diegoperini and implemented some essential updates to make this script as effective as possible.
+
+My previous iterations (not on Github) have included at some point or another used...
 
 * For versions of Safari older than 525 (which didn't support DOMContentLoaded) use the `document.readyState` method.
 * For Internet Explorer: using Conditional Compilation `@cc_on @` along with `setInterval` to check the `doScroll` response
@@ -35,7 +41,7 @@ I'm aware of the many other ways to do this, I know because I've tried them all 
 * Checking for `document && document.getElementsByTagName && document.getElementById && document.body`
 
 
-Just to recap
+Miscellaneous notes
 -------------
 
 Dean Edwards `document.write` of the deferred script has given problems on some pages (causing a consistent > 60 sec delay).
