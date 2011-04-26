@@ -67,11 +67,17 @@ var DOMready = (function() {
 		else if (isIE < 9) {
 			explorerTimer = win.setInterval(function() {
 				if (doc.body) {
+					// Check for doScroll success
 					try {
 						dce.('div').doScroll('left');
 						win.clearInterval(explorerTimer);
-						return process();
-					} catch(e) {}
+					} catch(e) { 
+						return;
+					}
+					
+					// Process function stack
+					process();
+					return;
 				}
 			}, 10);
 			
