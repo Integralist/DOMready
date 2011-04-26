@@ -4,10 +4,18 @@ var DOMready = (function() {
 	var win = window,
 		 doc = win.document,
 		 dce = doc.createElement,
+		 supportAEL = (function(){
+		 	if (doc.addEventListener) {
+		 		return true;
+		 	} else {
+		 		return false;
+		 	}
+		 }()), 
 		 queue = [],
 		 exec,
 		 loaded,
 		 original_onload,
+		 new_onload, 
 		 explorerTimer,
 		 readyStateTimer,
 		 isIE = (function() {
@@ -30,7 +38,7 @@ var DOMready = (function() {
 		loaded = true;
 		
 		// Cleanup
-		if (doc.addEventListener) {
+		if (supportAEL) {
 			doc.removeEventListener("DOMContentLoaded", process, false);
 		}
 	
@@ -47,7 +55,7 @@ var DOMready = (function() {
 			return fn();
 		}
 		
-		if (doc.addEventListener) {
+		if (supportAEL) {
 			// Any number of listeners can be set for when this event fires,
 			// but just know that this event only ever fires once
 			doc.addEventListener("DOMContentLoaded", process, false);
@@ -97,8 +105,7 @@ var DOMready = (function() {
 		// But make sure to store the original window.onload in case it was already set by another script
 		original_onload = win.onload;
 		
-		win.onload = function() {
-		
+		new_onload = function() {
 			// Note: calling process() now wont cause any problem for modern browsers.
 			// Because the function would have already been called when the DOM was loaded.
 			// Meaning the queue of functions have already been executed
@@ -109,7 +116,21 @@ var DOMready = (function() {
 				original_onload();
 			}
 			
+			// Clean-up
+			if (supportAEL) {
+				doc.removeEventListener('load', new_onload, false);
+			} else {
+				doc.detachEvent('load', new_onload);
+			}
 		};
+		
+		// According to @jdalton: using DOM1 model event handlers makes the script more secure. 
+		// Otherwise DOM0 event handlers could be overwritten by 3rd-party script.
+		if (supportAEL) {
+			doc.addEventListener('load', new_onload, false);
+		} else {
+			doc.attachEvent('load', new_onload);
+		}
 		
 		// As the DOM hasn't loaded yet we'll store this function and execute it later
 		queue.push(fn);
