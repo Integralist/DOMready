@@ -120,16 +120,16 @@ var DOMready = (function() {
 			if (supportAEL) {
 				doc.removeEventListener('load', new_onload, false);
 			} else {
-				doc.detachEvent('load', new_onload);
+				doc.detachEvent('onload', new_onload);
 			}
 		};
 		
-		// According to @jdalton: using DOM1 model event handlers makes the script more secure. 
+		// Using DOM1 model event handlers makes the script more secure. 
 		// Otherwise DOM0 event handlers could be overwritten by 3rd-party script.
 		if (supportAEL) {
 			doc.addEventListener('load', new_onload, false);
 		} else {
-			doc.attachEvent('load', new_onload);
+			doc.attachEvent('onload', new_onload);
 		}
 		
 		// As the DOM hasn't loaded yet we'll store this function and execute it later
