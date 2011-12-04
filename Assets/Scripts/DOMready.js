@@ -2,26 +2,26 @@ var DOMready = (function() {
 
 	// Variables used throughout this script
 	var win = window,
-		 doc = win.document,
-		 dce = doc.createElement,
-		 supportAEL = (function(){
-		 	if (doc.addEventListener) {
-		 		return true;
-		 	} else {
-		 		return false;
-		 	}
-		 }()), 
-		 queue = [],
-		 exec,
-		 loaded,
-		 fallback_onload, 
-		 explorerTimer,
-		 readyStateTimer,
-		 isIE = (function() {
+		doc = win.document,
+		dce = doc.createElement,
+		supportAEL = (function(){
+			if (doc.addEventListener) {
+				return true;
+			} else {
+				return false;
+			}
+		}()), 
+		queue = [],
+		exec,
+		loaded,
+		fallback_onload, 
+		explorerTimer,
+		readyStateTimer,
+		isIE = (function() {
 			var undef,
-				 v = 3,
-				 div = doc.createElement('div'),
-				 all = div.getElementsByTagName('i');
+				v = 3,
+				div = doc.createElement('div'),
+				all = div.getElementsByTagName('i');
 		
 			while (
 				div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
