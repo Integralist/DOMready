@@ -4,13 +4,7 @@ var DOMready = (function() {
 	var win = window,
 		doc = win.document,
 		dce = doc.createElement,
-		supportAEL = (function(){
-			if (doc.addEventListener) {
-				return true;
-			} else {
-				return false;
-			}
-		}()), 
+		supportAEL = !!doc.addEventListener, 
 		queue = [],
 		exec,
 		loaded,
