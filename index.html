@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>DOM Ready by Integralist</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/Integralist/DOMready">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/Integralist/DOMready/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/Integralist/DOMready/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>DOM Ready</h1>
+          <p>A cross browser 'DOM ready' function</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/Integralist">Integralist</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>DOM Ready</h1>
+
+<h2>Description</h2>
+
+<p>A cross browser 'DOM ready' function.</p>
+
+<p>If you don't know already, (usually) the best time to trigger your JavaScript functions is when the DOM (Document Object Model) is ready to be interacted with.</p>
+
+<p>If you try and call a function which modifies an element in the DOM, but yet you're not waiting for the <code>window.onload</code> event then the function may fire before the DOM element is available to be interacted with and your script will generate an error.</p>
+
+<p>So to avoid this, developers would write code that looked like this...</p>
+
+<p><code>window.onload = function() { // do something here };</code></p>
+
+<p>...but the problem was that it was just too slow for most developers to put up with. You want to be interacting with your DOM as soon as possible, but if you use the <code>window.onload</code> event then you're not just waiting for the DOM but all its content (such as images, stylesheets, iframes etc) to load as well.</p>
+
+<p>Developers needed something quicker, and so here comes the <code>DOMContentLoaded</code> event which fires when the browser has finished parsing the document but before the rest of the assets in the page (e.g. images, stylesheets, iframes etc) have finished loading.</p>
+
+<p>Problem is this event isn't supported cross-browser so developers have come up with a multitude of ways of mimicking this.</p>
+
+<p>This script is one such way.</p>
+
+<h2>Disclaimer</h2>
+
+<p>This DOMready function was originally a modified version of <a href="https://github.com/ded" class="user-mention">@ded</a>'s "Smallest DOMReady code, ever' - but it quickly became apparent (thanks to <a href="https://github.com/jdalton" class="user-mention">@jdalton</a>) that this version was sorely lacking and that although the work-around did 'work' it was very slow and in some browsers only marginally quicker than a simple window.onload.</p>
+
+<p>So I reverted the code back to a previous version I had from a few years back.</p>
+
+<p>But since then I've had feedback from both <a href="https://github.com/jdalton" class="user-mention">@jdalton</a> and <a href="https://github.com/diegoperini" class="user-mention">@diegoperini</a> and implemented some essential updates to make this script as effective as possible.</p>
+
+<p>My previous iterations (not on Github) have included at some point or another used...</p>
+
+<ul>
+<li>For versions of Safari older than 525 (which didn't support DOMContentLoaded) use the <code>document.readyState</code> method.</li>
+<li>For Internet Explorer: using Conditional Compilation <code>@cc_on @</code> along with <code>setInterval</code> to check the <code>doScroll</code> response</li>
+<li>For Internet Explorer: <code>document.write</code> of deferred script</li>
+<li>For Internet Explorer: checking for both <code>document.body &amp;&amp; document.body.lastChild</code>
+</li>
+<li>Checking for <code>document &amp;&amp; document.getElementsByTagName &amp;&amp; document.getElementById &amp;&amp; document.body</code>
+</li>
+</ul><h2>Miscellaneous notes</h2>
+
+<p>Dean Edwards <code>document.write</code> of the deferred script has given problems on some pages (causing a consistent &gt; 60 sec delay).</p>
+
+<p>Dean also suggests that <code>document.readyState</code> is unreliable and that he has seen cases where <code>document.readyState</code> was "complete" while <code>document.body</code> was still <code>null</code>.
+As well as other cases where <code>document.readyState</code> was not complete until after all images on the page were loaded.</p>
+
+<p>The <code>doScroll</code> method has been seen to succeed while <code>document.body</code> is still <code>null</code>.
+And <code>document.body</code> can be non-null prior to the DOM being available.</p>
+
+<p>One solution that so far has tested 100% OK is to combine a test for both <code>document.body</code> and success of <code>doScroll</code>.
+Sometimes the <code>doScroll</code> is not available and Internet Explorer falls back to <code>window.onload</code> so some developers tried using a timer to counter this.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
